@@ -22,3 +22,31 @@ let g:tagbar_type_javascript = {
 " Showmarks
 let g:showmarks_enable=1
 
+set mouse=a  "Allows you to click around the text editor with your mouse to move the cursor
+set showmatch "Highlights matching brackets in programming languages
+set autoindent  "If you're indented, new lines will also be indented
+set smartindent  "Automatically indents lines after opening a bracket in programming languages
+# set formatoptions-=tc "Get rid of auto line returns
+set backspace=2  "This makes the backspace key function like it does in other programs.
+set ts=2 sw=2 et "Tabstop spacing
+set number  "Enables line numbering
+set smarttab  "Improves tabbing
+set smartcase
+set noerrorbells
+set nobackup
+set ruler
+set showcmd
+set textwidth=80
+set colorcolumn=+1
+
+set foldmethod=manual
+
+"swaps out curor on insert for line
+augroup CursorSwap
+  autocmd!
+  autocmd InsertEnter * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape ibeam"
+  autocmd InsertLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
+  autocmd VimLeave * silent execute "!gconftool-2 --type string --set /apps/gnome-terminal/profiles/Default/cursor_shape block"
+augroup END
+
+
