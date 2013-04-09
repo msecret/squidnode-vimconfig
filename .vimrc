@@ -19,3 +19,6 @@ let g:tagbar_type_javascript = {
   \ 'ctagsbin' : '/usr/local/bin/jsctags'
 \ }
 
+" Showmarks
+let g:showmarks_enable=1
+
