@@ -11,3 +11,11 @@ let g:CommandTAcceptSelectionMap = '<C-t>'
 let g:CommandTAcceptSelectionTabMap = '<CR>'
 map <leader>vs :split :CommandTFlush<cr>\|:CommandT app/views<cr>
 
+" Tagbar
+let g:tagbar_usearrows = 1
+nnoremap <silent> <F8> :TagbarToggle<CR>
+nnoremap <leader>l :TagbarOpen fj<CR>
+let g:tagbar_type_javascript = {
+  \ 'ctagsbin' : '/usr/local/bin/jsctags'
+\ }
+
