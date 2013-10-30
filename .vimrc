@@ -1,5 +1,5 @@
 
-call pathogen#runtime_append_all_bundles()
+call pathogen#incubate()
 call pathogen#helptags()
 filetype plugin indent on
 
@@ -26,7 +26,6 @@ set mouse=a  "Allows you to click around the text editor with your mouse to move
 set showmatch "Highlights matching brackets in programming languages
 set autoindent  "If you're indented, new lines will also be indented
 set smartindent  "Automatically indents lines after opening a bracket in programming languages
-# set formatoptions-=tc "Get rid of auto line returns
 set backspace=2  "This makes the backspace key function like it does in other programs.
 set ts=2 sw=2 et "Tabstop spacing
 set number  "Enables line numbering
@@ -38,6 +37,8 @@ set ruler
 set showcmd
 set textwidth=80
 set colorcolumn=+1
+set guioptions+=a
+set clipboard+=autoselect
 
 set foldmethod=manual
 
