@@ -1,16 +1,17 @@
 set nocompatible
+nmap <leader>t :CtrlP<CR>
 
 call pathogen#incubate()
 call pathogen#helptags()
-filetype plugin indent on
 
-" Command-T
-let g:CommandTMaxFiles=80000
-let g:CommandTMaxDepth=25
-let g:CommandTMaxCachedDirectories=300
-let g:CommandTAcceptSelectionMap = '<C-t>'
-let g:CommandTAcceptSelectionTabMap = '<CR>'
-map <leader>vs :split :CommandTFlush<cr>\|:CommandT app/views<cr>
+filetype off
+filetype plugin indent off
+set runtimepath+=$GOROOT/misc/vim
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+filetype plugin indent on
+syntax on
+
+let g:ctrlp_map = '<c-t>'
 
 " Tagbar
 let g:tagbar_usearrows = 1
@@ -26,7 +27,7 @@ let g:showmarks_enable=1
 set autoindent  "If you're indented, new lines will also be indented
 set autoread "Reload file when changed.
 set backspace=2  "This makes the backspace key function like it does.
-set clipboard+=unnamed
+set clipboard=unnamed
 set colorcolumn=+1
 set directory-=. "Don't store swap files in dir
 set encoding=utf-8
@@ -69,10 +70,13 @@ augroup END
 nmap <leader>a :Ack<space>
 nmap <leader>d :NERDTreeToggle<CR>
 nmap <leader>f :NERDTreeFind<CR>
-nmap <leader>t :CtrlP<CR>
-nmap <leader>] :TagbarToggle<CR>
 nmap <leader><space> :call whitespace#strip_trailing()<CR>
 nmap <leader>g :GitGutterToggle<CR>
+"
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <C-r><C-o>+
 
 
 " Plugin settings
@@ -101,3 +105,58 @@ else
   let &t_SI = "\<Esc>]50;CursorShape=1\x7"
   let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 endif
+
+" Supertab context aware setting
+let g:SuperTabDefaultCompletionType = "context"
+
+
+"" GO SETTINGS
+" f5 for build
+au Filetype go set makeprg=go\ build\ ./...
+nmap <F6> :make<CR>:copen<CR>
+
+" go linter
+function! s:GoVet()
+    cexpr system("go vet " . shellescape(expand('%')))
+    copen
+endfunction
+
+function! s:GoLint()
+    cexpr system("golint " . shellescape(expand('%')))
+    copen
+endfunction
+command! GoVet :call s:GoVet()
+command! GoLint :call s:GoLint()
+autocmd FileType go autocmd BufWritePre golint <afile>
+
+" GO Ctags 
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+au BufWritePost *.go silent! !ctags -R &
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+    \ }
+
