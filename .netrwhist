@@ -1,4 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =4
 let g:netrw_dirhist_1='/etc/chef/squidnode/cookbooks/lastpass'
 let g:netrw_dirhist_2='/home/msecret/dotconfigs/squidnode-vim_config/bundle/supertab'
+let g:netrw_dirhist_3='/home/msecret/Development/go/src/github.com/msecret'
+let g:netrw_dirhist_4='/home/msecret/Development/trashspotter/backend-api'
