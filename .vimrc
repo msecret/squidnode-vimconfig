@@ -16,7 +16,7 @@ Plugin 'dougireton/vim-chef'
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'fatih/vim-go'
 Plugin 'groenewege/vim-less'
-Plugin 'jmcantrell/vim-virtualen'
+Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
@@ -25,11 +25,15 @@ Plugin 'skammer/vim-css-color'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'othree/html5.vim'
+Plugin 'rizzatti/dash.vim'
+Plugin 'pangloss/vim-javascript'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'Valloric/YouCompleteMe'
+
+Bundle 'lepture/vim-jinja'
 
 
 call vundle#end()            " required
@@ -84,7 +88,34 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|exe|so|dll|pyc)$'
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
-" syntax checking
-let g:syntastic_html_checkers = ['w3']
-let g:syntastic_less_options = "--no-color"
+" syntastic default options
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+let g:syntastic_enable_balloons = 1
+let g:ycm_server_use_vim_stdout = 1
+let g:ycm_server_log_level = 'debug'
 
+" syntax checking
+let g:syntastic_python_checkers = ['pep8', 'pylint']
+let g:syntastic_html_checkers = ['tidy5', 'tidy']
+let g:syntastic_html_tidy_exec = 'tidy5'
+let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
+let g:syntastic_js_checks = ['jshint', 'eslint']
+let g:syntastic_es6_checks = ['eslint']
+let g:syntastic_json_checks = ['jsonlint']
+let g:syntastic_go_checks = ['golint', 'gofmt', 'go']
+let g:syntastic_hs_checks = ['hlint', 'hdevtools']
+let g:syntastic_md_checks = ['mdl']
+let g:syntastic_less_checks = ['lessc']
+let g:syntastic_less_options = "--no-color"
+let g:syntastic_ruby_checks = ['mri', 'rubylint']
+let g:syntastic_scss_checks = ['sassc', 'scss_lint']
+let g:syntastic_ts_checks = ['tsc', 'tslint']
+
+syntax on
+colorscheme base16-eighties
