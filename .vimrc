@@ -26,7 +26,7 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'othree/html5.vim'
 Plugin 'rizzatti/dash.vim'
-Plugin 'pangloss/vim-javascript'
+Plugin 'ryanoasis/vim-webdevicons'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
@@ -119,3 +119,5 @@ let g:syntastic_ts_checks = ['tsc', 'tslint']
 
 syntax on
 colorscheme base16-eighties
+let guifont="Sauce Code Powerline Plus Nerd File Types:h14"
+
