@@ -4,13 +4,10 @@ filetype off
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'airblade/vim-gitgutter'
 Plugin 'bling/vim-airline'
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'chrisbra/csv.vim'
 Plugin 'chriskempson/base16-vim'
 Plugin 'dougireton/vim-chef'
 Plugin 'edkolev/tmuxline.vim'
@@ -21,6 +18,8 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mileszs/ack.vim'
+Plugin 'myint/clang-complete'
+Plugin 'Shougo/neocomplete.vim'
 Plugin 'skammer/vim-css-color'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
@@ -31,7 +30,6 @@ Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
-Plugin 'Valloric/YouCompleteMe'
 
 Bundle 'lepture/vim-jinja'
 
@@ -46,6 +44,7 @@ set clipboard+=unnamed
 set colorcolumn=+1
 set directory-=. "Don't store swap files in dir
 set encoding=utf-8
+set exrc
 set expandtab
 set foldmethod=manual
 set guioptions+=a
@@ -57,6 +56,7 @@ set noerrorbells
 set nobackup
 set number  "Enables line numbering
 set ruler
+set shortmess+=A
 set showmatch "Highlights matching brackets in programming languages
 set smartcase
 set smartindent  "Automatically indents lines after opening a bracket
@@ -69,6 +69,14 @@ set wildmenu
 set wildmode=longest,list,full
 set mouse=a
 
+let &path.="src/include,"
+
+function! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
 
 "Key bindings
 nmap <leader>a :Ack<space>
@@ -76,17 +84,22 @@ nmap <leader>d :NERDTreeToggle<CR>
 nmap <leader>f :NERDTreeFind<CR>
 nmap <leader>t :CtrlP<CR>
 nmap <leader>] :TagbarToggle<CR>
-nmap <leader><space> :call whitespace#strip_trailing()<CR>
+nmap <leader><space> :call <SID>StripTrailingWhitespaces()
 nmap <leader>g :GitGutterToggle<CR>
+nmap <F8> :TagbarToggle<CR>
+" copy and paste
+vmap <C-c> "+yi
+vmap <C-x> "+c
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
 
+nnoremap <F5> :make!<cr>
 
 " Plugin settings
 let g:NERDSpaceDelims=1
-let g:gitgutter_max_signs = 400  
+let g:gitgutter_max_signs = 400
 let g:EclimCompletionMethod = 'omnifunc'
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|exe|so|dll|pyc)$'
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
 
 " syntastic default options
 " set statusline+=%#warningmsg#
@@ -97,8 +110,9 @@ let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_balloons = 1
-let g:ycm_server_use_vim_stdout = 1
-let g:ycm_server_log_level = 'debug'
+let g:neocomplete#enable_at_startup = 1
+" let g:ycm_server_use_vim_stdout = 1
+" let g:ycm_server_log_level = 'debug'
 
 " syntax checking
 let g:syntastic_python_checkers = ['pep8', 'pylint']
@@ -117,7 +131,9 @@ let g:syntastic_ruby_checks = ['mri', 'rubylint']
 let g:syntastic_scss_checks = ['sassc', 'scss_lint']
 let g:syntastic_ts_checks = ['tsc', 'tslint']
 
+" clang options
+let g:clang_user_options="-std=c++11"
+
 syntax on
 colorscheme base16-eighties
-let guifont="Sauce Code Powerline Plus Nerd File Types:h14"
-
+let guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
