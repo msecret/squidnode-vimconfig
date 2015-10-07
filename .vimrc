@@ -18,6 +18,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mileszs/ack.vim'
+Plugin 'mxw/vim-jsx.git'
 Plugin 'myint/clang-complete'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'skammer/vim-css-color'
@@ -26,6 +27,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'othree/html5.vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'ryanoasis/vim-webdevicons'
+Plugin 'pangloss/vim-javascript'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
@@ -119,7 +121,7 @@ let g:syntastic_python_checkers = ['pep8', 'pylint']
 let g:syntastic_html_checkers = ['tidy5', 'tidy']
 let g:syntastic_html_tidy_exec = 'tidy5'
 let g:syntastic_php_checkers = ['php', 'phpcs', 'phpmd']
-let g:syntastic_js_checks = ['jshint', 'eslint']
+let g:syntastic_javascript_checkers = ['eslint']
 let g:syntastic_es6_checks = ['eslint']
 let g:syntastic_json_checks = ['jsonlint']
 let g:syntastic_go_checks = ['golint', 'gofmt', 'go']
