@@ -14,12 +14,12 @@ Plugin 'edkolev/tmuxline.vim'
 Plugin 'fatih/vim-go'
 Plugin 'groenewege/vim-less'
 Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'justmao945/vim-clang'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mileszs/ack.vim'
 Plugin 'mxw/vim-jsx.git'
-Plugin 'myint/clang-complete'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'skammer/vim-css-color'
 Plugin 'scrooloose/nerdtree'
@@ -102,6 +102,10 @@ let g:NERDSpaceDelims=1
 let g:gitgutter_max_signs = 400
 let g:EclimCompletionMethod = 'omnifunc'
 let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|exe|so|dll|pyc)$'
+let g:clang_c_options = '-std=gnu11'
+let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
+let g:clang_user_options="-std=c++11"
+let g:clang_diagsopt = ''
 
 " syntastic default options
 " set statusline+=%#warningmsg#
@@ -132,9 +136,8 @@ let g:syntastic_less_options = "--no-color"
 let g:syntastic_ruby_checks = ['mri', 'rubylint']
 let g:syntastic_scss_checks = ['sassc', 'scss_lint']
 let g:syntastic_ts_checks = ['tsc', 'tslint']
-
-" clang options
-let g:clang_user_options="-std=c++11"
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
 syntax on
 colorscheme base16-eighties
