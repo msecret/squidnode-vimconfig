@@ -1,5 +1,8 @@
-set nocompatible
-filetype off
+set magic
+set shell=/bin/sh
+set modeline
+set modelines=5
+" filetype off
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -7,12 +10,16 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
 Plugin 'airblade/vim-gitgutter'
+Plugin 'benmills/vimux'
 Plugin 'bling/vim-airline'
 Plugin 'chriskempson/base16-vim'
+Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'dougireton/vim-chef'
 Plugin 'edkolev/tmuxline.vim'
+Plugin 'elzr/vim-json'
 Plugin 'fatih/vim-go'
 Plugin 'groenewege/vim-less'
+Plugin 'jelera/vim-javascript-syntax'
 Plugin 'jmcantrell/vim-virtualenv'
 Plugin 'justmao945/vim-clang'
 Plugin 'kien/ctrlp.vim'
@@ -28,48 +35,116 @@ Plugin 'othree/html5.vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'ryanoasis/vim-webdevicons'
 Plugin 'pangloss/vim-javascript'
+Plugin 'plasticboy/vim-markdown'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 
-Bundle 'lepture/vim-jinja'
-
 
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-set autoread "Reload file when changed.
+syntax enable
 set background=dark
+colorscheme base16-eighties
+set t_Co=256
+
+" Shortcut for disabling highlighting
+nnoremap <silent> <C-l> :nohl<CR><C-l>
+
+" Shortcut for enabling and disabling paste mode
+map <leader>pp :setlocal paste!<cr>
+
+" Shortcut for enabling spelling
+map <leader>ss :setlocal spell!<cr>
+
+" Allow for macosx and tmux and vim clipboard sharing.
+" Following this blog post: http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
+set clipboard=unnamed
+
+" Split 'correctly' for left-to-right readers.
+set splitbelow
+set splitright
+
+set history=700
+
+" For when you forget to sudo.. Really Write the file.
+cmap w!! w !sudo tee % >/dev/null
+
+" Moving up and down faster than one row at a damn time.
+"
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>
+
+set noerrorbells
+set novisualbell
+set t_vb=
+
+if has( 'gui_running' )
+
+    set guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
+
+    set background=dark
+    colorscheme dracula
+    let g:airline_theme = 'kolor'
+
+    let g:airline_powerline_fonts = 0
+    if ! exists( 'g:airline_symbols' )
+        let g:airline_symbols = {}
+        let g:airline_left_sep = '»'
+        let g:airline_right_sep = '«'
+        let g:airline_symbols.space = "\ua0\ua0"
+        let g:airline_symbols.crypt = '🔒'
+        let g:airline_symbols.linenr = '␊'
+        let g:airline_symbols.branch = '⎇'
+        let g:airline_symbols.paste = 'ρ'
+        let g:airline_symbols.whitespace = 'Ξ'
+    endif
+
+    autocmd! GUIEnter * set vb t_vb=
+
+endif
+
+set autoread "Reload file when changed.
 set backspace=2  "This makes the backspace key function like it does.
 set clipboard+=unnamed
-set colorcolumn=+1
-set directory-=. "Don't store swap files in dir
-set encoding=utf-8
+set colorcolumn=80
 set exrc
 set expandtab
+set completeopt=menuone
 set foldmethod=manual
-set guioptions+=a
 set ignorecase
+set smartcase
 set incsearch
 set laststatus=2
-set mouse=a  "Allows you to click around the text editor with your mouse to move
-set noerrorbells
+set lazyredraw
 set nobackup
+set nowb
+set noswapfile
 set number  "Enables line numbering
 set ruler
-set shortmess+=A
 set showmatch "Highlights matching brackets in programming languages
-set smartcase
+set mat=2
 set smartindent  "Automatically indents lines after opening a bracket
 set smarttab  "Improves tabbing
 set showcmd
-set textwidth=80
+set tm=500
+set ffs=unix,dos,mac
+set encoding=utf8
 set ts=2 sw=2 et "Tabstop spacing
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip     " MacOSX/Linux
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 set wildmenu
 set wildmode=longest,list,full
+set whichwrap+=<,>,h,l
 set mouse=a
+set lbr
+set ai
+set si
+
+set listchars=eol:¬,tab:›·,trail:·,extends:›,precedes:‹
+set list
+map <leader>ll :set list!<cr>
 
 let &path.="src/include,"
 
@@ -81,6 +156,13 @@ function! <SID>StripTrailingWhitespaces()
 endfun
 
 "Key bindings
+map 0 ^
+if has("mac") || has("macunix")
+    nmap <D-j> <M-j>
+    nmap <D-k> <M-k>
+    vmap <D-j> <M-j>
+    vmap <D-k> <M-k>
+endif
 nmap <leader>a :Ack<space>
 nmap <leader>d :NERDTreeToggle<CR>
 nmap <leader>f :NERDTreeFind<CR>
@@ -94,18 +176,74 @@ vmap <C-c> "+yi
 vmap <C-x> "+c
 vmap <C-v> c<ESC>"+p
 imap <C-v> <ESC>"+pa
+" replace selected text with register with r
+vmap r "_dP
+vmap ,d "_d
 
 nnoremap <F5> :make!<cr>
+
+func! DeleteTrailingWS()
+    exe "normal mz"
+    %s/\s\+$//ge
+    exe "normal `z"
+endfunc
+autocmd BufWrite * :call DeleteTrailingWS()
 
 " Plugin settings
 let g:NERDSpaceDelims=1
 let g:gitgutter_max_signs = 400
 let g:EclimCompletionMethod = 'omnifunc'
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn|exe|so|dll|pyc)$'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\v[\/]\.?(git|hg|svn|node_modules|bower_components|vendor)$',
+    \ 'file': '\v\.(exe|so|dll)$'
+    \ }
 let g:clang_c_options = '-std=gnu11'
 let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
 let g:clang_user_options="-std=c++11"
 let g:clang_diagsopt = ''
+let g:vim_markdown_folding_disabled = 1
+let g:tmuxline_preset = {
+  \'a'    : [ '#S:#I.#P', '#(/usr/local/bin/outatime)' ],
+  \'b'    : [ '#(/usr/local/bin/current_itunes_song)' ],
+  \'win'  : [ '#I #W' ],
+  \'cwin' : [ '#I #W #F' ],
+  \'x'    : [ '#(/usr/local/bin/battery -tp -g cyan -w magenta) ' ],
+  \'z'    : ['%l:%M%p', '%a %m/%d'] }
+let g:tmuxline_separators = {
+      \ 'left' : '',
+      \ 'left_alt': '»',
+      \ 'right' : '',
+      \ 'right_alt' : '«',
+      \ 'space' : ' '}
+let g:EditorConfig_exec_path = '/usr/local/bin/editorconfig'
+let g:EditorConfig_exclude_patterns = [ 'fugitive://.*', 'scp://.*' ]
+
+if isdirectory( expand( "~/.vim/bundle/vim-gitgutter" ) )
+
+    let g:gitgutter_sign_added = '+'
+    let g:gitgutter_sign_modified = '~'
+    let g:gitgutter_sign_removed = '-'
+    let g:gitgutter_sign_modified_removed = '≠'
+    "silent! if emoji#available()
+      "let g:gitgutter_sign_added = emoji#for( 'rocket' ) . ' '
+      "let g:gitgutter_sign_modified = emoji#for( 'snake' ) . ' '
+      "let g:gitgutter_sign_removed = emoji#for( 'scissors' ) . ' '
+      "let g:gitgutter_sign_modified_removed = emoji#for( 'collision' ) . ' '
+    "endif
+
+endif
+
+
+au BufRead,BufNewFile *.jshintrc set ft=json
+au BufRead,BufNewFile *.bowerrc set ft=json
+au BufRead,BufNewFile *.pantheonrc set ft=json
+
+au BufRead,BufNewFile *.txt set ft=markdown
+au BufRead,BufNewFile *.text set ft=markdown
+
+au BufRead,BufNewFile *.applescript set ft=applescript
+
+au BufRead,BufNewFile *.eslintrc set ft=json
 
 " syntastic default options
 " set statusline+=%#warningmsg#
@@ -139,6 +277,4 @@ let g:syntastic_ts_checks = ['tsc', 'tslint']
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
 
-syntax on
-colorscheme base16-eighties
 let guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
