@@ -45,10 +45,11 @@ Plugin 'tpope/vim-surround'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-syntax enable
-set background=dark
-colorscheme base16-eighties
 set t_Co=256
+let base16colorspace=256
+colorscheme base16-atelierdune
+set background=dark
+syntax enable
 
 " Shortcut for disabling highlighting
 nnoremap <silent> <C-l> :nohl<CR><C-l>
@@ -86,7 +87,6 @@ if has( 'gui_running' )
     set guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
 
     set background=dark
-    colorscheme dracula
     let g:airline_theme = 'kolor'
 
     let g:airline_powerline_fonts = 0
@@ -195,12 +195,12 @@ let g:gitgutter_max_signs = 400
 let g:EclimCompletionMethod = 'omnifunc'
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.?(git|hg|svn|node_modules|bower_components|vendor)$',
-    \ 'file': '\v\.(exe|so|dll)$'
+    \ 'file': '\v\.(exe|o|a|so|dll)$'
     \ }
 let g:clang_c_options = '-std=gnu11'
 let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
 let g:clang_user_options="-std=c++11"
-let g:clang_diagsopt = ''
+let g:clang_diagsopt = 'rightbelow'
 let g:vim_markdown_folding_disabled = 1
 let g:tmuxline_preset = {
   \'a'    : [ '#S:#I.#P', '#(/usr/local/bin/outatime)' ],
@@ -220,16 +220,6 @@ let g:EditorConfig_exclude_patterns = [ 'fugitive://.*', 'scp://.*' ]
 
 if isdirectory( expand( "~/.vim/bundle/vim-gitgutter" ) )
 
-    let g:gitgutter_sign_added = '+'
-    let g:gitgutter_sign_modified = '~'
-    let g:gitgutter_sign_removed = '-'
-    let g:gitgutter_sign_modified_removed = '≠'
-    "silent! if emoji#available()
-      "let g:gitgutter_sign_added = emoji#for( 'rocket' ) . ' '
-      "let g:gitgutter_sign_modified = emoji#for( 'snake' ) . ' '
-      "let g:gitgutter_sign_removed = emoji#for( 'scissors' ) . ' '
-      "let g:gitgutter_sign_modified_removed = emoji#for( 'collision' ) . ' '
-    "endif
 
 endif
 
