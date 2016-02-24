@@ -21,7 +21,7 @@ Plugin 'fatih/vim-go'
 Plugin 'groenewege/vim-less'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'jmcantrell/vim-virtualenv'
-Plugin 'justmao945/vim-clang'
+"Plugin 'justmao945/vim-clang'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
@@ -111,6 +111,7 @@ set backspace=2  "This makes the backspace key function like it does.
 set clipboard+=unnamed
 set colorcolumn=80
 set exrc
+set secure
 set expandtab
 set completeopt=menuone
 set foldmethod=manual
@@ -146,7 +147,7 @@ set listchars=eol:¬,tab:›·,trail:·,extends:›,precedes:‹
 set list
 map <leader>ll :set list!<cr>
 
-let &path.="src/include,"
+let &path.="src/include,/usr/local/sbin,/usr/local/bin,/usr/sbin,/usr/bin"
 
 function! <SID>StripTrailingWhitespaces()
     let l = line(".")
@@ -197,10 +198,10 @@ let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.?(git|hg|svn|node_modules|bower_components|vendor)$',
     \ 'file': '\v\.(exe|o|a|so|dll)$'
     \ }
-let g:clang_c_options = '-std=gnu11'
-let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
-let g:clang_user_options="-std=c++11"
-let g:clang_diagsopt = 'rightbelow'
+"let g:clang_c_options = '-std=gnu11'
+"let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
+"let g:clang_user_options="-std=c++11"
+"let g:clang_diagsopt = 'rightbelow'
 let g:vim_markdown_folding_disabled = 1
 let g:tmuxline_preset = {
   \'a'    : [ '#S:#I.#P', '#(/usr/local/bin/outatime)' ],
@@ -236,17 +237,15 @@ au BufRead,BufNewFile *.applescript set ft=applescript
 au BufRead,BufNewFile *.eslintrc set ft=json
 
 " syntastic default options
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_enable_balloons = 1
 let g:neocomplete#enable_at_startup = 1
-" let g:ycm_server_use_vim_stdout = 1
-" let g:ycm_server_log_level = 'debug'
 
 " syntax checking
 let g:syntastic_python_checkers = ['pep8', 'pylint']
@@ -266,5 +265,7 @@ let g:syntastic_scss_checks = ['sassc', 'scss_lint']
 let g:syntastic_ts_checks = ['tsc', 'tslint']
 let g:syntastic_cpp_compiler = 'clang++'
 let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+let g:syntastic_cpp_remove_include_errors = 1
+let g:syntastic_config_debug = 1
 
 let guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
