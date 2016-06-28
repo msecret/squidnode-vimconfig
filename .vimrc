@@ -9,33 +9,38 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 
+
+Plugin 'aghareza/vim-gitgrep'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'benmills/vimux'
 Plugin 'bling/vim-airline'
+Plugin 'blueyed/vim-resize'
 Plugin 'chriskempson/base16-vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'dougireton/vim-chef'
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'elzr/vim-json'
 Plugin 'fatih/vim-go'
-Plugin 'groenewege/vim-less'
+Plugin 'henrik/vim-qargs'
 Plugin 'jelera/vim-javascript-syntax'
 Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'justmao945/vim-clang'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mileszs/ack.vim'
-Plugin 'mxw/vim-jsx.git'
+Plugin 'mxw/vim-jsx'
 Plugin 'Shougo/neocomplete.vim'
 Plugin 'skammer/vim-css-color'
 Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
+Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'othree/html5.vim'
 Plugin 'rizzatti/dash.vim'
 Plugin 'ryanoasis/vim-webdevicons'
 Plugin 'pangloss/vim-javascript'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'tpope/vim-abolish'
 Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
@@ -44,7 +49,6 @@ Plugin 'tpope/vim-surround'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
-
 set t_Co=256
 let base16colorspace=256
 colorscheme base16-atelierdune
@@ -59,6 +63,15 @@ map <leader>pp :setlocal paste!<cr>
 
 " Shortcut for enabling spelling
 map <leader>ss :setlocal spell!<cr>
+
+map <F2> :mksession! ~/vim_session <cr> " Quick write session with F2
+map <F3> :source ~/vim_session <cr>     " And load session with F3
+
+" Resize mappings
+nnoremap <silent> <C-Up> :call ResizeUp()<cr>
+nnoremap <silent> <C-Down> :call ResizeDown()<cr>
+nnoremap <silent> <C-Right> :call ResizeRight()<cr>
+nnoremap <silent> <C-Left> :call ResizeLeft()<cr>
 
 " Allow for macosx and tmux and vim clipboard sharing.
 " Following this blog post: http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
@@ -147,7 +160,7 @@ set listchars=eol:¬,tab:›·,trail:·,extends:›,precedes:‹
 set list
 map <leader>ll :set list!<cr>
 
-let &path.="src/include,/usr/local/sbin,/usr/local/bin,/usr/sbin,/usr/bin"
+let &path.="/usr/include/,/usr/local/include/,/usr/local/bin/,/usr/bin/"
 
 function! <SID>StripTrailingWhitespaces()
     let l = line(".")
@@ -193,7 +206,6 @@ autocmd BufWrite * :call DeleteTrailingWS()
 " Plugin settings
 let g:NERDSpaceDelims=1
 let g:gitgutter_max_signs = 400
-let g:EclimCompletionMethod = 'omnifunc'
 let g:ctrlp_custom_ignore = {
     \ 'dir':  '\v[\/]\.?(git|hg|svn|node_modules|bower_components|vendor)$',
     \ 'file': '\v\.(exe|o|a|so|dll)$'
@@ -202,6 +214,8 @@ let g:ctrlp_custom_ignore = {
 "let g:clang_cpp_options = '-std=c++11 -stdlib=libc++'
 "let g:clang_user_options="-std=c++11"
 "let g:clang_diagsopt = 'rightbelow'
+let g:cpp_class_scope_highlight = 1
+
 let g:vim_markdown_folding_disabled = 1
 let g:tmuxline_preset = {
   \'a'    : [ '#S:#I.#P', '#(/usr/local/bin/outatime)' ],
@@ -236,15 +250,20 @@ au BufRead,BufNewFile *.applescript set ft=applescript
 
 au BufRead,BufNewFile *.eslintrc set ft=json
 
-" syntastic default options
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
+
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_loc_list_height = 4
+
 let g:syntastic_enable_balloons = 1
+let g:syntastic_echo_current_error = 1
+let g:syntastic_cursor_columns = 1
+
 let g:neocomplete#enable_at_startup = 1
 
 " syntax checking
@@ -257,15 +276,13 @@ let g:syntastic_es6_checks = ['eslint']
 let g:syntastic_json_checks = ['jsonlint']
 let g:syntastic_go_checks = ['golint', 'gofmt', 'go']
 let g:syntastic_hs_checks = ['hlint', 'hdevtools']
-let g:syntastic_md_checks = ['mdl']
+let g:syntastic_md_checkers = ['mdl']
 let g:syntastic_less_checks = ['lessc']
 let g:syntastic_less_options = "--no-color"
-let g:syntastic_ruby_checks = ['mri', 'rubylint']
-let g:syntastic_scss_checks = ['sassc', 'scss_lint']
-let g:syntastic_ts_checks = ['tsc', 'tslint']
-let g:syntastic_cpp_compiler = 'clang++'
-let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
-let g:syntastic_cpp_remove_include_errors = 1
-let g:syntastic_config_debug = 1
+let g:syntastic_ruby_checkers = ['mri', 'rubylint']
+let g:syntastic_scss_checkers = ['stylelint']
+let g:syntastic_ts_checkers = ['tsc', 'tslint']
+let g:syntastic_cpp_checkers = ['gcc']
+let g:syntastic_cpp_compiler = 'g++'
 
 let guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
