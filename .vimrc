@@ -46,6 +46,7 @@ Plugin 'tpope/vim-git'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
+Plugin 'wting/gitsessions.vim'
 
 
 call vundle#end()            " required
@@ -197,6 +198,11 @@ vmap ,d "_d
 
 nnoremap <F5> :make!<cr>
 
+nnoremap <leader>gss :GitSessionSave<cr>
+nnoremap <leader>gsl :GitSessionLoad<cr>
+nnoremap <leader>gsd :GitSessionDelete<cr>
+
+
 func! DeleteTrailingWS()
     exe "normal mz"
     %s/\s\+$//ge
@@ -238,7 +244,6 @@ if isdirectory( expand( "~/.vim/bundle/vim-gitgutter" ) )
 
 
 endif
-
 
 au BufRead,BufNewFile *.jshintrc set ft=json
 au BufRead,BufNewFile *.bowerrc set ft=json
