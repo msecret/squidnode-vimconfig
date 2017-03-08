@@ -17,8 +17,9 @@ Plugin 'bling/vim-airline'
 Plugin 'blueyed/vim-resize'
 Plugin 'chriskempson/base16-vim'
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'dougireton/vim-chef'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'edkolev/tmuxline.vim'
+Plugin 'elmcast/elm-vim'
 Plugin 'elzr/vim-json'
 Plugin 'fatih/vim-go'
 Plugin 'henrik/vim-qargs'
@@ -26,7 +27,7 @@ Plugin 'jelera/vim-javascript-syntax'
 Plugin 'jmcantrell/vim-virtualenv'
 "Plugin 'justmao945/vim-clang'
 Plugin 'Konfekt/FastFold'
-Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'leafgarland/typescript-vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'mileszs/ack.vim'
@@ -37,7 +38,6 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'othree/html5.vim'
-Plugin 'rizzatti/dash.vim'
 Plugin 'ryanoasis/vim-webdevicons'
 Plugin 'pangloss/vim-javascript'
 Plugin 'plasticboy/vim-markdown'
@@ -260,6 +260,8 @@ let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_loc_list_height = 4
+
+" let g:syntastic_debug = 3
 
 let g:syntastic_enable_balloons = 1
 let g:syntastic_echo_current_error = 1
