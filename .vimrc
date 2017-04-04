@@ -121,6 +121,7 @@ if has( 'gui_running' )
         let g:airline_symbols.branch = '⎇'
         let g:airline_symbols.paste = 'ρ'
         let g:airline_symbols.whitespace = 'Ξ'
+        let g:airline_powerline_fonts = 1
     endif
 
     autocmd! GUIEnter * set vb t_vb=
