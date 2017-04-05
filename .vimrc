@@ -44,7 +44,6 @@ Plugin 'scrooloose/syntastic'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'othree/html5.vim'
 Plugin 'reedes/vim-pencil'
-Plugin 'ryanoasis/vim-devicons'
 Plugin 'pangloss/vim-javascript'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'tpope/vim-abolish'
@@ -54,6 +53,7 @@ Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 Plugin 'wting/gitsessions.vim'
 
+Plugin 'ryanoasis/vim-devicons'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -249,6 +249,8 @@ let g:EditorConfig_exclude_patterns = [ 'fugitive://.*', 'scp://.*' ]
 
 if isdirectory( expand( "~/.vim/bundle/vim-gitgutter" ) )
 
+let g:webdevicons_enable_ctrlp = 1
+let g:ctrlp_formatline_func = 's:formatline(s:curtype() == "buf" ? v:val : WebDevIconsGetFileTypeSymbol(v:val) . " " . v:val) '
 
 endif
 
@@ -301,3 +303,7 @@ let g:syntastic_cpp_checkers = ['gcc']
 let g:syntastic_cpp_compiler = 'g++'
 
 let guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
+
+let g:elm_format_autosave = 1
+let g:elm_setup_keybindings = 0
+
