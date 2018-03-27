@@ -1,5 +1,5 @@
 set magic
-set shell=/bin/sh
+set shell=/usr/local/bin/zsh
 set modeline
 set modelines=5
 
@@ -7,6 +7,10 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+if has('nvim')
+  let $VISUAL = 'nvr -cc split --remote-wait'
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -407,8 +411,8 @@ if has('nvim')
 
   nnoremap <leader>t :call GFilesFallback()<CR>
   nmap <leader>c :Commits<CR>
-  nnoremap <leader>x :TermSplit<CR> \| :set winfixheight<CR>
-  nmap <leader>v :TermVSplit<CR> \| :set winfixwidth<CR>
+  nnoremap <leader>x :TermSplit<CR> \| :set winfixheight \| :set winfixwidth<CR>
+  nmap <leader>v :TermVSplit<CR> \| :set winfixwidth \| :set winfixheight<CR>
   nmap <leader>n :TermTab<CR>
   nnoremap <leader>, :tabprevious<CR>
   nnoremap <leader>. :tabnext<CR>
