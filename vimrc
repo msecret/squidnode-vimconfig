@@ -70,7 +70,6 @@ if has('nvim')
   Plug 'challenger-deep-theme/vim'
   Plug 'eugen0329/vim-esearch'
   Plug 'jsfaint/gen_tags.vim'
-  Plug 'junegunn/fzf.vim'
   Plug 'ludovicchabant/vim-gutentags'
   Plug 'mhartington/nvim-typescript'
   Plug 'mhinz/vim-grepper'
@@ -85,7 +84,11 @@ if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'Shougo/vimproc.vim', {'do' : 'make'}
   Plug 'ternjs/tern_for_vim', { 'do': 'yarn add && yarn global add tern' }
-  Plug '/usr/local/opt/fzf'
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
+  if has("mac") || has("macunix")
+    Plug '/usr/local/opt/fzf'
+  endif
 endif
 
 call plug#end()
@@ -384,7 +387,11 @@ if has('nvim')
   " don't resize shit
 
   " fzf plugin options
-  set rtp+=/usr/local/opt/fzf
+  if has("mac") || has("macunix")
+    set rtp+=/usr/local/opt/fzf
+  else
+    set rtp+=~/.fzf
+  endif
   let g:fzf_layout = { 'down': '~40%' }
   let g:fzf_action = {
     \ 'ctrl-t': 'tab split',
