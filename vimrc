@@ -328,6 +328,32 @@ endif
 
 if has('nvim')
   set shell=/usr/local/bin/zsh
+  if !has('oni')
+    " fzf plugin options
+    if has("mac") || has("macunix")
+      set rtp+=/usr/local/opt/fzf
+    else
+      set rtp+=~/.fzf
+    endif
+    let g:fzf_layout = { 'down': '~40%' }
+    let g:fzf_action = {
+      \ 'ctrl-t': 'tab split',
+      \ 'ctrl-x': 'split',
+      \ 'ctrl-v': 'vsplit' }
+    function! GFilesFallback()
+      let output = system('git rev-parse --show-toplevel')
+      let prefix = get(g:, 'fzf_command_prefix', '')
+      if v:shell_error == 0
+        exec "normal :" . prefix . "GFiles\<CR>"
+      else
+        exec "normal :" . prefix . "Files\<CR>"
+      endif
+      return 0
+    endfunction
+    " Auto close fzf on q
+    autocmd! FileType fzf tnoremap <buffer> <leader>q <c-c>
+    nnoremap <leader>t :call GFilesFallback()<CR>
+  endif
   let g:deoplete#enable_at_startup = 1
   let g:neomake_open_list = 2
   call neomake#configure#automake('nw', 750)
@@ -361,41 +387,13 @@ if has('nvim')
   \ }
 
   " don't resize shit
-
-  " fzf plugin options
-  if has("mac") || has("macunix")
-    set rtp+=/usr/local/opt/fzf
-  else
-    set rtp+=~/.fzf
-  endif
-  let g:fzf_layout = { 'down': '~40%' }
-  let g:fzf_action = {
-    \ 'ctrl-t': 'tab split',
-    \ 'ctrl-x': 'split',
-    \ 'ctrl-v': 'vsplit' }
-
   command! -nargs=* TermSplit split | terminal <args>
   command! -nargs=* TermVSplit vsplit | terminal <args>
   command! -nargs=* TermTab tabnew | terminal <args>
 
-  function! GFilesFallback()
-    let output = system('git rev-parse --show-toplevel')
-    let prefix = get(g:, 'fzf_command_prefix', '')
-    if v:shell_error == 0
-      exec "normal :" . prefix . "GFiles\<CR>"
-    else
-      exec "normal :" . prefix . "Files\<CR>"
-    endif
-    return 0
-  endfunction
-
-  " Auto close fzf on q
-  autocmd! FileType fzf tnoremap <buffer> <leader>q <c-c>
-
-  nnoremap <leader>t :call GFilesFallback()<CR>
   nmap <leader>c :Commits<CR>
-  nnoremap <leader>x :TermSplit<CR> \| :set winfixheight \| :set winfixwidth<CR>
-  nmap <leader>v :TermVSplit<CR> \| :set winfixwidth \| :set winfixheight<CR>
+  nnoremap <leader>x :TermSplit<CR> \| :set winfixheight<CR>
+  nmap <leader>v :TermVSplit<CR> \| :set winfixheight<CR>
   nmap <leader>n :TermTab<CR>
   nnoremap <leader>, :tabprevious<CR>
   nnoremap <leader>. :tabnext<CR>
@@ -403,10 +401,10 @@ if has('nvim')
   nnoremap <leader>] :tabnext<CR>
   tnoremap <Esc> <C-\><C-n>
 
-  nnoremap <S-J> :res +2<CR>
-  nnoremap <S-K> :res -2<CR>
-  nnoremap <S-H> :vertical resize -2<CR>
-  nnoremap <S-L> :vertical resize +2<CR>
+  nnoremap <C-S-J> :res +2<CR>
+  nnoremap <C-S-K> :res -2<CR>
+  nnoremap <C-S-H> :vertical resize -2<CR>
+  nnoremap <C-S-L> :vertical resize +2<CR>
 
   nnoremap <C-J> <C-W><C-J>
   nnoremap <C-K> <C-W><C-K>
