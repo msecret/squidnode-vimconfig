@@ -9,25 +9,27 @@ if empty(glob('~/.vim/autoload/plug.vim'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-if has('nvim')
+if has('nvim') && !has('oni')
   let $VISUAL = 'nvr -cc split --remote-wait'
 endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'airblade/vim-gitgutter'
-" Plug 'bling/vim-airline'
-Plug 'vim-airline/vim-airline'
 Plug 'chemzqm/vim-jsx-improve'
 Plug 'chriskempson/base16-vim'
-Plug 'edkolev/tmuxline.vim'
 Plug 'elmcast/elm-vim'
-Plug 'ryanoasis/vim-devicons'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'othree/html5.vim'
 Plug 'reedes/vim-pencil'
+
+if !has('oni')
+  Plug 'airblade/vim-gitgutter'
+  Plug 'vim-airline/vim-airline'
+  Plug 'ryanoasis/vim-devicons'
+endif
+
 if !has('nvim')
-Plug 'aghareza/vim-gitgrep'
+  Plug 'aghareza/vim-gitgrep'
   Plug 'benmills/vimux'
   Plug 'blueyed/vim-resize'
   Plug 'cakebaker/scss-syntax.vim'
@@ -61,31 +63,31 @@ Plug 'aghareza/vim-gitgrep'
   Plug 'wting/gitsessions.vim'
 endif
 if has('nvim')
-  " Plug 'euclio/vim-markdown-composer'
-  " Plug 'cazador481/fakeclip.neovim'
-  Plug 'bagrat/vim-workspace'
+  if !has('oni')
+    Plug 'bagrat/vim-workspace'
+    Plug 'BurningEther/nvimux'
+    Plug 'challenger-deep-theme/vim'
+    Plug 'eugen0329/vim-esearch'
+    Plug 'mhartington/nvim-typescript'
+    Plug 'mhinz/vim-grepper'
+    Plug 'mhinz/vim-startify'
+    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug 'junegunn/fzf.vim'
+    Plug 'Shougo/denite.nvim'
+  endif
   Plug 'brooth/far.vim'
-  Plug 'BurningEther/nvimux'
   Plug 'carlitux/deoplete-ternjs'
-  Plug 'challenger-deep-theme/vim'
-  Plug 'eugen0329/vim-esearch'
   Plug 'jsfaint/gen_tags.vim'
   Plug 'ludovicchabant/vim-gutentags'
-  Plug 'mhartington/nvim-typescript'
-  Plug 'mhinz/vim-grepper'
-  Plug 'mhinz/vim-startify'
   Plug 'neomake/neomake'
   Plug 'othree/yajs.vim'
   Plug 'pangloss/vim-javascript'
   Plug 'Quramy/tsuquyomi', { 'do': 'npm install -g typescript' }
   Plug 'reedes/vim-pencil'
   Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'Shougo/denite.nvim'
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   Plug 'Shougo/vimproc.vim', {'do' : 'make'}
   Plug 'ternjs/tern_for_vim', { 'do': 'yarn add && yarn global add tern' }
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
   if has("mac") || has("macunix")
     Plug '/usr/local/opt/fzf'
   endif
@@ -103,24 +105,8 @@ colorscheme base16-eighties
 set background=dark
 syntax enable
 
-" Shortcut for disabling highlighting
-nnoremap <silent> <C-l> :nohl<CR><C-l>
-
-" Shortcut for enabling and disabling paste mode
-map <leader>pp :setlocal paste!<cr>
-
 map <F2> :mksession! ~/vim_session <cr> " Quick write session with F2
 map <F3> :source ~/vim_session <cr>     " And load session with F3
-
-" Resize mappings
-nnoremap <silent> <C-Up> :call ResizeUp()<cr>
-nnoremap <silent> <C-Down> :call ResizeDown()<cr>
-nnoremap <silent> <C-Right> :call ResizeRight()<cr>
-nnoremap <silent> <C-Left> :call ResizeLeft()<cr>
-
-" Allow for macosx and tmux and vim clipboard sharing.
-" Following this blog post: http://evertpot.com/osx-tmux-vim-copy-paste-clipboard/
-set clipboard=unnamed
 
 " Split 'correctly' for left-to-right readers.
 set splitbelow
@@ -131,38 +117,31 @@ set history=700
 " For when you forget to sudo.. Really Write the file.
 cmap w!! w !sudo tee % >/dev/null
 
-" Moving up and down faster than one row at a damn time.
-"
-nnoremap <C-e> 3<C-e>
-nnoremap <C-y> 3<C-y>
-
 set noerrorbells
 set novisualbell
 set t_vb=
 
 if has( 'gui_running' )
+  set guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
 
-    set guifont="Inconsolata for Powerline Plus Nerd File Types Medium 11"
+  set background=dark
+  let g:airline_theme = 'kolor'
 
-    set background=dark
-    let g:airline_theme = 'kolor'
+  let g:airline_powerline_fonts = 0
+  if ! exists( 'g:airline_symbols' )
+      let g:airline_symbols = {}
+      let g:airline_left_sep = '»'
+      let g:airline_right_sep = '«'
+      let g:airline_symbols.space = "\ua0\ua0"
+      let g:airline_symbols.crypt = '🔒'
+      let g:airline_symbols.linenr = '␊'
+      let g:airline_symbols.branch = '⎇'
+      let g:airline_symbols.paste = 'ρ'
+      let g:airline_symbols.whitespace = 'Ξ'
+      let g:airline_powerline_fonts = 1
+  endif
 
-    let g:airline_powerline_fonts = 0
-    if ! exists( 'g:airline_symbols' )
-        let g:airline_symbols = {}
-        let g:airline_left_sep = '»'
-        let g:airline_right_sep = '«'
-        let g:airline_symbols.space = "\ua0\ua0"
-        let g:airline_symbols.crypt = '🔒'
-        let g:airline_symbols.linenr = '␊'
-        let g:airline_symbols.branch = '⎇'
-        let g:airline_symbols.paste = 'ρ'
-        let g:airline_symbols.whitespace = 'Ξ'
-        let g:airline_powerline_fonts = 1
-    endif
-
-    autocmd! GUIEnter * set vb t_vb=
-
+  autocmd! GUIEnter * set vb t_vb=
 endif
 
 set autoread "Reload file when changed.
@@ -208,9 +187,6 @@ set si
 set listchars=eol:¬,tab:›·,trail:·,extends:›,precedes:‹
 set list
 map <leader>ll :set list!<cr>
-
-if has('nvim')
-endif
 
 let &path.="/usr/include/,/usr/local/include/,/usr/local/bin/,/usr/bin/"
 
