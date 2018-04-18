@@ -75,11 +75,14 @@ if has('nvim')
     Plug 'junegunn/fzf.vim'
     Plug 'Shougo/denite.nvim'
   endif
+  Plug 'benjie/local-npm-bin.vim'
   Plug 'brooth/far.vim'
   Plug 'carlitux/deoplete-ternjs'
   Plug 'jsfaint/gen_tags.vim'
+  Plug 'kassio/neoterm'
   Plug 'ludovicchabant/vim-gutentags'
   Plug 'neomake/neomake'
+  Plug 'numkil/ag.nvim'
   Plug 'othree/yajs.vim'
   Plug 'pangloss/vim-javascript'
   Plug 'Quramy/tsuquyomi', { 'do': 'npm install -g typescript' }
@@ -91,6 +94,8 @@ if has('nvim')
   if has("mac") || has("macunix")
     Plug '/usr/local/opt/fzf'
   endif
+  Plug 'thaerkh/vim-workspace'
+  Plug 'tpope/vim-fugitive'
 endif
 
 call plug#end()
@@ -219,8 +224,8 @@ endif
 " copy and paste
 vmap <C-c> "+yi
 vmap <C-x> "+c
-vmap <C-v> c<ESC>"+p
-imap <C-v> <ESC>"+pa
+" vmap <C-v> c<ESC>"+p
+" imap <C-v> <ESC>"+pa
 " replace selected text with register with r
 vmap r "_dP
 vmap ,d "_d
@@ -287,7 +292,9 @@ au BufRead,BufNewFile *.applescript set ft=applescript
 au BufRead,BufNewFile *.eslintrc set ft=json
 
 set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
+if !has('nvim')
+  set statusline+=%{SyntasticStatuslineFlag()}
+endif
 set statusline+=%*
 
 if !has('nvim')
@@ -355,7 +362,7 @@ if has('nvim')
     nnoremap <leader>t :call GFilesFallback()<CR>
   endif
   let g:deoplete#enable_at_startup = 1
-  let g:neomake_open_list = 2
+  let g:neomake_open_list = 0
   call neomake#configure#automake('nw', 750)
   set termguicolors
   " Javascript pllugins
@@ -376,6 +383,7 @@ if has('nvim')
   let g:tsuquyomi_auto_open = 1
   let g:tsuquyomi_disable_quickfix = 1
   let g:neomake_javascript_enabled_makers = ['eslint']
+  let g:neomake_ruby_enabled_markers = ['rubocop', 'mri']
   autocmd! BufWritePost * Neomake
   let g:neomake_warning_sign = {
   \ 'text': '?',
@@ -391,15 +399,46 @@ if has('nvim')
   command! -nargs=* TermVSplit vsplit | terminal <args>
   command! -nargs=* TermTab tabnew | terminal <args>
 
+  function! GFilesFallback()
+    let output = system('git rev-parse --show-toplevel')
+    let prefix = get(g:, 'fzf_command_prefix', '')
+    if v:shell_error == 0
+      exec "normal :" . prefix . "GFiles\<CR>"
+    else
+      exec "normal :" . prefix . "Files\<CR>"
+    endif
+    return 0
+  endfunction
+
+  " Auto close fzf on q
+  autocmd! FileType fzf tnoremap <buffer> <leader>q <c-c>
+
+  " Use fzf with buffers
+  function! s:buflist()
+    redir => ls
+    silent ls
+    redir END
+    return split(ls, '\n')
+  endfunction
+
+  function! s:bufopen(e)
+    execute 'buffer' matchstr(a:e, '^[ 0-9]*')
+  endfunction
+
+  nnoremap <silent> <Leader>b :call fzf#run({
+  \   'source':  reverse(<sid>buflist()),
+  \   'sink':    function('<sid>bufopen'),
+  \   'options': '+m',
+  \   'down':    len(<sid>buflist()) + 2
+  \ })<CR>
+
+  nnoremap <leader>t :call GFilesFallback()<CR>
   nmap <leader>c :Commits<CR>
   nnoremap <leader>x :TermSplit<CR> \| :set winfixheight<CR>
   nmap <leader>v :TermVSplit<CR> \| :set winfixheight<CR>
   nmap <leader>n :TermTab<CR>
   nnoremap <leader>, :tabprevious<CR>
   nnoremap <leader>. :tabnext<CR>
-  nnoremap <leader>[ :tabprevious<CR>
-  nnoremap <leader>] :tabnext<CR>
-  tnoremap <Esc> <C-\><C-n>
 
   nnoremap <C-S-J> :res +2<CR>
   nnoremap <C-S-K> :res -2<CR>
@@ -410,6 +449,11 @@ if has('nvim')
   nnoremap <C-K> <C-W><C-K>
   nnoremap <C-L> <C-W><C-L>
   nnoremap <C-H> <C-W><C-H>
+  tnoremap <Esc> <C-\><C-n>
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-l> <C-\><C-n><C-w>l
 
   " vim-workspace
   function! g:WorkspaceSetCustomColors()
